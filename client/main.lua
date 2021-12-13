@@ -6,7 +6,7 @@ local function SetupItems(shop, license, stocks)
     local products = Config.Locations[shop].products
     local playerJob = QBCore.Functions.GetPlayerData().job.name
     local items = {}
-    for i = 1, #products do
+    for i, _ in pairs(products) do
         if stocks then
             for j = 1, #stocks do
                 if products[i].name == stocks[j].item then
@@ -76,6 +76,10 @@ RegisterNetEvent('qb-shops:client:RestockShopItems', function(shop, amount)
     end
 end)
 
+RegisterNetEvent('qb-sna-shops:client:RestockDone', function()
+    QBCore.Functions.Notify("Magasin livré")
+end)
+
 -- Threads
 
 CreateThread(function()
@@ -86,7 +90,7 @@ CreateThread(function()
 
         for shop, _ in pairs(Config.Locations) do
             local position = Config.Locations[shop]["coords"]
-            local products = Config.Locations[shop].products
+            --local products = Config.Locations[shop].products
             for _, loc in pairs(position) do
                 local dist = #(PlayerPos - vector3(loc["x"], loc["y"], loc["z"]))
                 if dist < 10 then
@@ -98,7 +102,7 @@ CreateThread(function()
                             local ShopItems = {}
                             ShopItems.items = {}
                             QBCore.Functions.TriggerCallback('qb-shops:server:getLicenseStatus', function(hasLicense, hasLicenseItem)
-                                QBCore.Functions.TriggerCallback('qb-shops:server:getStock', function(stocks)
+                                QBCore.Functions.TriggerCallback('qb-sna-shops:server:getStock', function(stocks)
                                     ShopItems.label = Config.Locations[shop]["label"]
                                     if Config.Locations[shop].type == "weapon" then
                                         ShopItems.items = SetupItems(shop, hasLicense, stocks)
@@ -120,6 +124,32 @@ CreateThread(function()
                                     ShopItems.slots = 30
                                     TriggerServerEvent("inventory:server:OpenInventory", "shop", "Itemshop_"..shop, ShopItems)
                                 end, shop)
+                            end)
+                        end
+                    end
+                end
+            end
+            if Config.Locations[shop]["delivery"] then
+                local dist2 = #(PlayerPos - vector3(Config.Locations[shop]["delivery"]["x"], Config.Locations[shop]["delivery"]["y"], Config.Locations[shop]["delivery"]["z"]))
+                if dist2 < 10 then
+                    InRange = true
+                    DrawMarker(2, Config.Locations[shop]["delivery"]["x"], Config.Locations[shop]["delivery"]["y"], Config.Locations[shop]["delivery"]["z"], 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.25, 0.2, 0.1, 255, 255, 255, 155, 0, 0, 0, 1, 0, 0, 0)
+                    if dist2 < 1 then
+                        DrawText3Ds(Config.Locations[shop]["delivery"]["x"], Config.Locations[shop]["delivery"]["y"], Config.Locations[shop]["delivery"]["z"] + 0.15, '~g~[E]~w~ - Livraison')
+                        if IsControlJustPressed(0, 38) then -- E
+                            --Find vehicle near marker
+                            local vehicle = QBCore.Functions.GetClosestVehicle()
+                            --wait some seconds for delivery
+                            QBCore.Functions.Progressbar("deliver_shop", "Livraison magasin", 10000, false, true, {
+                                disableMovement = false,
+                                disableCarMovement = false,
+                                disableMouse = false,
+                                disableCombat = false,
+                            }, {}, {}, {}, function() -- Done
+                                --Check if trunk of the vehicle contain products from stock and fill it
+                                TriggerServerEvent('qb-sna-shops:server:RestockShopStocks', shop, QBCore.Functions.GetPlate(vehicle))
+                            end, function()
+                                QBCore.Functions.Notify("Failed!", "error")
                             end)
                         end
                     end

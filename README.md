@@ -20,3 +20,7 @@ Stocks have to be filled by trucker job or deactivated in config (false to the a
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>
+
+
+#ToDo
+Lors de la livraison les objets a 0 ne sont pas enleves du coffre, ils restent affichés a 0
