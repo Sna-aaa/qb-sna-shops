@@ -174,10 +174,7 @@ CreateThread(function()
 				SetBlipSprite(StoreBlip, 52)
 				SetBlipScale(StoreBlip, 0.6)
 			elseif Config.Locations[store]["products"] == Config.Products["coffeeplace"] then
-				SetBlipSprite(StoreBlip, 52)
-				SetBlipScale(StoreBlip, 0.6)
-			elseif Config.Locations[store]["products"] == Config.Products["gearshop"] then
-				SetBlipSprite(StoreBlip, 52)
+				SetBlipSprite(StoreBlip, 197)
 				SetBlipScale(StoreBlip, 0.6)
 			elseif Config.Locations[store]["products"] == Config.Products["hardware"] then
 				SetBlipSprite(StoreBlip, 402)
@@ -186,18 +183,15 @@ CreateThread(function()
 				SetBlipSprite(StoreBlip, 110)
 				SetBlipScale(StoreBlip, 0.85)
 			elseif Config.Locations[store]["products"] == Config.Products["leisureshop"] then
-				SetBlipSprite(StoreBlip, 52)
-				SetBlipScale(StoreBlip, 0.6)
-				SetBlipColour(StoreBlip, 3)
-			elseif Config.Locations[store]["products"] == Config.Products["mustapha"] then
-				SetBlipSprite(StoreBlip, 225)
+				SetBlipSprite(StoreBlip, 94)
 				SetBlipScale(StoreBlip, 0.6)
 				SetBlipColour(StoreBlip, 3)
 			elseif Config.Locations[store]["products"] == Config.Products["coffeeshop"] then
 				SetBlipSprite(StoreBlip, 140)
 				SetBlipScale(StoreBlip, 0.55)
+                SetBlipColour(StoreBlip, 2)
 			elseif Config.Locations[store]["products"] == Config.Products["casino"] then
-				SetBlipSprite(StoreBlip, 617)
+				SetBlipSprite(StoreBlip, 683)
 				SetBlipScale(StoreBlip, 0.70)
 			end
 
